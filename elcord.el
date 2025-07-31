@@ -62,7 +62,7 @@ See <https://discordapp.com/developers/applications/me>."
   :type 'integer
   :group 'elcord)
 
-(defcustom elcord-idle-message "Getting something to drink..."
+(defcustom elcord-idle-message "Ausente do Emacs..."
   "Message to show when elcord status is idle."
   :type 'string)
 
@@ -74,8 +74,8 @@ See <https://discordapp.com/developers/applications/me>."
 (defcustom elcord-mode-icon-alist '((agda-mode . "agda-mode_icon")
                                     (assembly-mode . "assembly-mode_icon")
                                     (bqn-mode . "bqn-mode_icon")
-                                    (c-mode . "c-mode_icon")
-                                    (c++-mode . "cpp-mode_icon")
+                                    (c-ts-mode . "c-mode_icon")
+                                    (c++-ts-mode . "cpp-mode_icon")
                                     (clojure-mode . "clojure-mode_icon")
                                     (csharp-mode . "csharp-mode_icon")
                                     (comint-mode . "comint-mode_icon")
@@ -140,8 +140,8 @@ Note, these icon names must be available as 'small_image' in Discord."
 (defcustom elcord-mode-text-alist '((agda-mode . "Agda")
                                     (assembly-mode . "Assembly")
                                     (bqn-mode . "BQN")
-                                    (c-mode . "C  ")
-                                    (c++-mode . "C++")
+                                    (c-ts-mode . "C  ")
+                                    (c++-ts-mode . "C++")
                                     (csharp-mode . "C#")
                                     (cperl-mode . "Perl")
                                     (elixir-mode . "Elixir")
@@ -430,7 +430,7 @@ Argument EVNT The available output from the process."
   (or elcord--sock
       (ignore-errors
         (unless elcord-quiet
-          (message "elcord: attempting reconnect.."))
+          (message "elcord: tentando reconexão.."))
         (setq elcord--sock (elcord--make-process))
         (condition-case nil
             (elcord--send-packet 0 `(("v" . 1) ("client_id" . ,(elcord--resolve-client-id))))
@@ -451,7 +451,7 @@ Argument EVNT The available output from the process."
     ;;Reconnected.
     ;; Put a pending message unless we already got first handshake
     (unless (or elcord--update-presence-timer elcord-quiet)
-      (message "elcord: connecting..."))
+      (message "elcord: conectando..."))
     (elcord--cancel-reconnect)))
 
 (defun elcord--start-reconnect ()
@@ -468,7 +468,7 @@ Argument EVNT The available output from the process."
 (defun elcord--handle-disconnect ()
   "Handles reconnecting when socket disconnects."
   (unless elcord-quiet
-    (message "elcord: disconnected by remote host"))
+    (message "elcord: fechado pelo remote host"))
   ;;Stop updating presence for now
   (elcord--cancel-updates)
   (setq elcord--sock nil)
@@ -694,7 +694,7 @@ If there is no 'previous' buffer attempt to find a non-boring buffer to initiali
   "Start sending periodic update to Discord Rich Presence."
   (unless elcord--update-presence-timer
     (unless elcord-quiet
-      (message "elcord: connected. starting updates"))
+      (message "elcord: conectado."))
     ;;Start sending updates now that we've heard from discord
     (setq elcord--last-known-position -1
           elcord--last-known-buffer-name ""
@@ -744,7 +744,7 @@ If there is no 'previous' buffer attempt to find a non-boring buffer to initiali
     (elcord--start-updates)
 
     (unless elcord-quiet
-      (message "elcord: welcome back"))))
+      (message "elcord: bem-vindo(a) novamente"))))
 
 
 (provide 'elcord)
