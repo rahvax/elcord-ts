@@ -80,6 +80,7 @@ See <https://discordapp.com/developers/applications/me>."
                                     (csharp-mode . "csharp-mode_icon")
                                     (comint-mode . "comint-mode_icon")
                                     (cperl-mode . "cperl-mode_icon")
+                                    (dart-mode . "dart-mode_icon")
                                     (dockerfile-mode . "dockerfile-mode_icon")
                                     (elixir-mode . "elixir-mode_icon")
                                     (emacs-lisp-mode . (elcord--editor-icon))
@@ -144,6 +145,7 @@ Note, these icon names must be available as 'small_image' in Discord."
                                     (c++-ts-mode . "C++")
                                     (csharp-mode . "C#")
                                     (cperl-mode . "Perl")
+                                    (dart-mode . "Dart")
                                     (elixir-mode . "Elixir")
                                     (enh-ruby-mode . "Ruby")
                                     (erlang-mode . "Erlang")
@@ -543,13 +545,14 @@ otherwise if it is a function, call it with `mode' and return that value."
 If an icon is mapped by `elcord-mode-icon-alist', then that is used.
 Otherwise, if the mode is a derived mode, try to find an icon for it.
 If no icon is available, use the default icon."
-  (let ((mode major-mode)
-        (ret (elcord--editor-icon)))
+  (let* ((modes (derived-mode-all-parents major-mode))
+         (mode (pop modes))
+         (ret (elcord--editor-icon)))
     (while mode
       (if-let ((icon (elcord--find-mode-entry elcord-mode-icon-alist mode)))
           (setq ret (elcord--resolve-icon-base icon)
                 mode nil)
-        (setq mode (get mode 'derived-mode-parent))))
+        (setq mode (pop modes))))
     ret))
 
 (defun elcord--mode-text ()
